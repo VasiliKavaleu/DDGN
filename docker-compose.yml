@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+        web:
+                build: ./DDGN
+                command: gunicorn -c gunicorn.conf DDGN.wsgi
+                volumes:
+                        - ./DDGN:/usr/src/app
+                ports:
+                        - "8000:8000"
+        nginx:
+                build: ./nginx
+                depends_on:
+                        - web
+                command: nginx -g 'daemon off;'
+                ports:
+                        - "80:80"
+                volumes:
+                        - ./DDGN/static:/var/www/static
+                        - ./DDGN/media:/var/www/media 
